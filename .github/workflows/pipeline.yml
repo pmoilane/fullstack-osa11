@@ -30,7 +30,7 @@ jobs:
         if: ${{ github.event_name == 'push' && contains(join(github.event.commits.*.message), '#skip') == false}}
         run: curl ${{ secrets.RENDER_DEPLOY_HOOK }}
   tag_release:
-    needs: [simple_deployment_pipeline]
+    needs: [deployment_pipeline]
     runs-on: ubuntu-latest
     permissions:
       contents: write
