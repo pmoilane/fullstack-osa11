@@ -46,15 +46,11 @@ jobs:
           DEFAULT_BUMP: patch
   a_test_job:
     needs: [deployment_pipeline]
-    if: ${{ always() }}
+    if: ${{ failure() }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
       - name: github context
-        if: ${{ success() }}
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: echo "$GITHUB_CONTEXT"
-      - name: github context
-        if: ${{ failure() }}
-        run: echo "${{ github.job }} job of ${{ github.repository }} has ${{ job.status }}"
+        run: echo "${{ github.job }} job of ${{ github.repository }} has ${{ job.status }} $GITHUB_CONTEXT"
