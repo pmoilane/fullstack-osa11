@@ -50,6 +50,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - name: github context
+        if: ${{ failure() }}
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: echo "$GITHUB_CONTEXT"
