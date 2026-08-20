@@ -45,11 +45,11 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DEFAULT_BUMP: patch
   a_test_job:
-    if: ${{ failure() }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
       - name: github context
+        if: ${{ failure() }}
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: echo "$GITHUB_CONTEXT"
