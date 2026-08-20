@@ -46,6 +46,7 @@ jobs:
           DEFAULT_BUMP: patch
   a_test_job:
     needs: [deployment_pipeline]
+    if: ${{ always() }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
