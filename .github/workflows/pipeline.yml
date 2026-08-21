@@ -54,8 +54,8 @@ jobs:
         env:
           NEEDS_CONTEXT: ${{ toJson(needs) }}
           FAILED_JOB: ${{ case(
-            needs.deployment_pipeline.result == 'failure', 'deployment pipeline',
+            needs.deployment_pipeline.result == 'failure', 'deployment_pipeline',
             'unknown'
             )}}
         run: |
-          echo "${{ github.event.server_url }}/${{ github.event.repository }}/actions/runs/${{ github.event.run_id }} $FAILED_JOB"
+          echo "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }} $FAILED_JOB"
