@@ -53,4 +53,9 @@ jobs:
       - name: github context
         env:
           NEEDS_CONTEXT: ${{ toJson(needs) }}
-        run: echo "${{ github.job }} job of ${{ github.repository }} has ${{ job.status }} $NEEDS_CONTEXT"
+          FAILED_JOB: ${{ case(
+            needs.deployment_pipeline.result == 'failure', 'deployment pipeline',
+            'unknown'
+            )}}
+        run: |
+          echo "${{ github.event.server_url }}/${{ github.event.repository }}/actions/runs/${{ github.event.run_id }} $FAILED_JOB"
