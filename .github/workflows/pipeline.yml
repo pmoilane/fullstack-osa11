@@ -44,15 +44,50 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DEFAULT_BUMP: patch
-  a_test_job:
+  success_notification:
+    needs: [deployment_pipeline]
+    if: ${{ success() && github.event_name == 'push' && contains(join(github.event.commits.*.message), '#skip') == false}}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Discord notification success
+        uses: sarisia/actions-status-discord@eb045afee445dc055c18d3d90bd0f244fd062708
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          nodetail: true
+          content: ':white_check_mark: Successful deplyment!'
+          title: 'Show details'
+          url: ${{ github.event.head_commit.url }}
+          description: |
+            **Commit:** ${{ github.event.after }}
+            **Message:** ${{ github.event.head_commit.message }}
+            **Author:** ${{ github.actor }}
+  fail_notification:
     needs: [deployment_pipeline]
     if: ${{ failure() }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-        with:
-          fetch-depth: '0'
-      - name: github context
+      - name: Discord notification fail
         env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: echo "$GITHUB_CONTEXT"
+          NEEDS_CONTEXT: ${{ toJson(needs) }}
+          BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
+          FAILED_JOB: ${{ case(
+            needs.deployment_pipeline.result == 'failure', 'deployment pipeline',
+            'unknown'
+            )}}
+        uses: sarisia/actions-status-discord@eb045afee445dc055c18d3d90bd0f244fd062708
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          content: ':X: Build failed!'
+          title: 'Details'
+          description: |
+            **Repository:** ${{ github.event.repository }}
+            **Branch:** ${{ env.BRANCH_NAME }}
+            **Commit:** ${{ github.event.after }}
+            **Author:** ${{ github.actor }}
+            **Workflow:** ${{ github.workflow }}
+            **Job:** ${{ env.FAILED_JOB }}
+
+            [View workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+            [View commit](${{ github.server_url }}/${{ github.repository }}/commit/${{github.event.after}})
