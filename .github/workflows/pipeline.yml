@@ -59,7 +59,7 @@ jobs:
           title: 'Show details'
           url: ${{ github.event.head_commit.url }}
           description: |
-            **Commit:** ${{ github.event.after }}
+            **Commit:** ${{ github.sha }}
             **Message:** ${{ github.event.head_commit.message }}
             **Author:** ${{ github.actor }}
   fail_notification:
@@ -84,7 +84,7 @@ jobs:
           description: |
             **Repository:** ${{ github.event.repository }}
             **Branch:** ${{ env.BRANCH_NAME }}
-            **Commit:** ${{ github.event.after }}
+            **Commit:** ${{ github.sha }}
             **Author:** ${{ github.actor }}
             **Workflow:** ${{ github.workflow }}
             **Job:** ${{ env.FAILED_JOB }}
