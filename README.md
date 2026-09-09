@@ -15,3 +15,7 @@ Start by running `npm install` inside the project folder
 ## Deployed app
 
 https://fullstack-osa11.onrender.com/
+
+## Exercise 21 and 22 repository
+
+https://github.com/pmoilane/fullstack-osa11-bloglist
